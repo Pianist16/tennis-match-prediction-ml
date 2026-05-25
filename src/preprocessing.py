@@ -75,11 +75,28 @@ def preprocess_matches(df):
     )
 
     for col in df.columns:
-        if col.endswith("_left") or col.endswith("_right"):
-            if "percentage" in col or "points won" in col or "games won" in col:
-                df[col + "_rate"] = df[col].apply(percent_to_float)
-            elif "Break Points" in col:
-                df[col + "_rate"] = df[col].apply(fraction_to_rate)
+        if not (col.endswith("_left") or col.endswith("_right")):
+            continue
+
+        if col in ["player_left", "player_right"]:
+            continue
+
+        numeric_col = col + "_numeric"
+
+        if (
+            "percentage" in col
+            or "points won" in col
+            or "Points Won" in col
+            or "games won" in col
+            or "games won" in col.lower()
+        ):
+            df[numeric_col] = df[col].apply(percent_to_float)
+
+        elif "Break Points" in col:
+            df[numeric_col] = df[col].apply(fraction_to_rate)
+
+        else:
+            df[numeric_col] = pd.to_numeric(df[col], errors="coerce")
 
     return df
 
