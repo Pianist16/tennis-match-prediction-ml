@@ -1,0 +1,14 @@
+{
+  "name": "tennis-match-prediction-ml",
+  "image": "python:3.11",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt"
+}
