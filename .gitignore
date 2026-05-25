@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.env
+
+trained-models/*
+!trained-models/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+data/intermediate/*
+!data/intermediate/.gitkeep
