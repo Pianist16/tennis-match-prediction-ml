@@ -12,3 +12,6 @@ data/processed/*
 
 data/intermediate/*
 !data/intermediate/.gitkeep
+input-data/raw/*.csv
+repo_snapshot*.txt
+.directory
