@@ -77,6 +77,8 @@ data/intermediate/
     feature_importance_results.csv
     validation_strategy_results.csv
     data_coverage_by_year.csv
+
+Note: generated raw/intermediate CSV datasets are not fully tracked in Git and can be regenerated from the pipeline scripts.
 ```
 
 ---
@@ -114,13 +116,11 @@ Designed for reproducible multi-machine workflows.
 # Documentation
 
 Detailed methodology:
-- `docs/methodology.md`
+- [Methodology](docs/methodology.md)
+
 
 Experiment analysis:
-- `docs/experiment_results.md`
-
-Generated experiment outputs:
-- `data/intermediate/*.csv`
+- [Experiment Results](docs/experiment_results.md)
 
 ---
 
