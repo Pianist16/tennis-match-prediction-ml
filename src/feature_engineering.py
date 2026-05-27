@@ -2,7 +2,11 @@ import pandas as pd
 
 from elo import add_elo_features
 from recent_form import add_recent_form_features
-from rolling_stats import add_rolling_stat_features
+from rolling_stats import (
+    add_rolling_stat_features,
+    add_rolling_stat_features_vs_similar_elo,
+    add_surface_rolling_stat_features,
+)
 
 PROCESSED_INPUT = "data/processed/matches_processed.csv"
 FEATURE_OUTPUT = "data/intermediate/matches_features_v1.csv"
@@ -32,13 +36,40 @@ def add_stat_differentials(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def add_odds_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df["odds_left_numeric"] = pd.to_numeric(df["odds_left"], errors="coerce")
+    df["odds_right_numeric"] = pd.to_numeric(df["odds_right"], errors="coerce")
+
+    df["odds_diff_left_minus_right"] = (
+        df["odds_left_numeric"] - df["odds_right_numeric"]
+    )
+
+    df["implied_prob_left"] = 1 / df["odds_left_numeric"]
+    df["implied_prob_right"] = 1 / df["odds_right_numeric"]
+
+    implied_sum = df["implied_prob_left"] + df["implied_prob_right"]
+
+    df["market_prob_left"] = df["implied_prob_left"] / implied_sum
+    df["market_prob_right"] = df["implied_prob_right"] / implied_sum
+
+    df["market_prob_diff_left_minus_right"] = (
+        df["market_prob_left"] - df["market_prob_right"]
+    )
+
+    return df
+
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     df = add_elo_features(df)
     df = add_recent_form_features(df)
     df = add_rolling_stat_features(df)
+    df = add_surface_rolling_stat_features(df)
+    df = add_rolling_stat_features_vs_similar_elo(df)
     df = add_stat_differentials(df)
+    df = add_odds_features(df)
 
     df["target_left_win"] = (df["winner_side"] == "left").astype(int)
 

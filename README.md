@@ -1,249 +1,134 @@
 # Tennis Match Prediction ML
 
-Machine learning project for predicting professional ATP tennis match outcomes using:
+Machine learning pipeline for ATP tennis match prediction using:
+- retrospective Elo ratings,
+- rolling player statistics,
+- bookmaker market probabilities,
+- and time-aware validation.
 
-* Retrospective Elo ratings
-* Rolling player performance statistics
-* Historical recent form
-* Time-aware validation
-* Flashscore-based custom data scraping pipeline
-
-The project is built with a fully containerized Python development workflow using VS Code Dev Containers and Docker.
-
----
-
-# Project Goals
-
-The main goal of this project is to build a realistic pre-match tennis prediction system using only information available before the match starts.
-
-The project focuses heavily on:
-
-* Proper chronological feature engineering
-* Avoiding data leakage
-* Reproducible ML pipelines
-* Realistic sports analytics methodology
-* Modular architecture for future expansion
+The project focuses primarily on:
+- structured feature engineering,
+- leakage prevention,
+- temporal evaluation methodology,
+- and reproducible analytical workflows.
 
 ---
 
-# Current Features
+# Current Benchmark
 
-## Retrospective Elo Ratings
+Primary evaluation methodology:
+- Train: 2018–2023
+- Validation: 2024
+- Test: 2025
 
-The project calculates chronological Elo ratings:
+Current realistic pre-match benchmark:
 
-* Players start from an initial rating
-* Matches are processed from oldest to newest
-* Elo ratings are updated after every match
-* Pre-match Elo values are stored as predictive features
+| Model | Features | Test Accuracy | ROC AUC |
+|---|---|---:|---:|
+| Logistic Regression | Elo + Rolling Stats | ~63–64% | ~0.69 |
+| Logistic Regression | Market + Elo + Rolling | ~67% | ~0.73–0.76 |
 
-Generated features:
-
-* `elo_left_before`
-* `elo_right_before`
-* `elo_diff_left_minus_right`
-
----
-
-## Recent Form Features
-
-Rolling recent-form features are calculated using only historical matches.
-
-Example:
-
-* Last 10 matches win rate
-* Historical rolling averages
-* Pre-match only information
-
-Generated features:
-
-* `left_recent_win_rate_before`
-* `right_recent_win_rate_before`
-* `recent_win_rate_diff_left_minus_right`
+Notes:
+- bookmaker market probabilities are currently the strongest feature group,
+- Elo remains the strongest non-market feature,
+- Random Forest models currently overfit more than Logistic Regression under temporal validation.
 
 ---
 
-## Rolling Statistical Features
-
-The project calculates rolling historical player statistics over previous matches.
-
-Examples:
-
-* Aces
-* Double faults
-* First serve percentage
-* Break point conversion
-* Service points won
-* Return points won
-* Total points won
-
-Rolling averages are calculated retrospectively for each player before every match.
-
-Generated features:
-
-* `rolling_Aces_diff_left_minus_right`
-* `rolling_Service Points Won_diff_left_minus_right`
-* `rolling_Return Points Won_diff_left_minus_right`
-* etc.
-
----
-
-# Realistic vs Leakage Models
-
-The project intentionally separates:
-
-## Realistic Pre-Match Features
-
-These are features available before the match starts:
-
-* Elo
-* Recent form
-* Rolling historical statistics
-
-## Post-Match Leakage Features
-
-These use statistics generated during the match itself:
-
-* Match aces
-* Match serve percentages
-* Match total points won
-
-These features are used only as a benchmark/sanity check.
-
----
-
-# Current Results
-
-## Pre-Match Model
-
-Features:
-
-* Elo difference
-* Recent form
-* Rolling historical statistics
-
-Validation:
-
-* Chronological train/test split
-* Time-aware evaluation
-
-Current performance:
-
-* Logistic Regression: ~66%
-* Random Forest: ~63%
-
----
-
-## Leakage Benchmark Model
-
-Uses post-match statistics for comparison.
-
-Current performance:
-
-* Logistic Regression: ~92%
-* Random Forest: ~92%
-
-This confirms the pipeline works correctly while also demonstrating the importance of avoiding data leakage.
-
----
-
-# Project Structure
-
-```text
-input-data/raw/
-    Raw scraped tournament match data
-
-src/
-    data_loader.py
-    preprocessing.py
-    feature_engineering.py
-    elo.py
-    recent_form.py
-    rolling_stats.py
-    model_training.py
-
-data/processed/
-    Cleaned processed datasets
-
-data/intermediate/
-    Feature-engineered datasets
-
-trained-models/
-    Saved trained ML models
-
-.devcontainer/
-    VS Code Dev Container configuration
-```
-
----
-
-# Technology Stack
-
-* Python
-* Pandas
-* Scikit-learn
-* Docker
-* VS Code Dev Containers
-* Git/GitHub
-
----
-
-# Data Pipeline
+# Pipeline Overview
 
 ```text
 Flashscore scraping
     ↓
-Raw CSV match data
+Raw match datasets
     ↓
-Preprocessing
+Preprocessing / normalization
     ↓
-Retrospective feature engineering
+Retrospective feature generation
     ↓
-Time-aware train/test split
+Temporal train/validation/test split
     ↓
-Machine learning models
+Feature experiments
+    ↓
+Model evaluation
 ```
+
+---
+
+# Repository Structure
+
+```text
+src/
+    preprocessing.py
+    feature_engineering.py
+    rolling_stats.py
+    elo.py
+    model_training.py
+    feature_experiments.py
+    data_coverage_analysis.py
+    validation_strategy_experiments.py
+
+docs/
+    methodology.md
+    experiment_results.md
+
+data/intermediate/
+    feature_experiment_results.csv
+    feature_importance_results.csv
+    validation_strategy_results.csv
+    data_coverage_by_year.csv
+```
+
+---
+
+# Methodology Highlights
+
+Implemented:
+- retrospective Elo generation,
+- rolling historical statistics,
+- bookmaker implied probabilities,
+- temporal validation,
+- feature ablation experiments,
+- feature importance analysis,
+- leakage benchmarking.
+
+The project explicitly separates:
+- realistic pre-match features,
+- post-match leakage features.
 
 ---
 
 # Development Environment
 
-The project uses a containerized development workflow.
+Containerized workflow using:
+- Python
+- Pandas
+- Scikit-learn
+- Docker
+- VS Code Dev Containers
 
-Requirements:
-
-* Docker
-* VS Code
-* Dev Containers extension
-
-The environment is fully reproducible across:
-
-* Ubuntu
-* Windows
-* Multiple systems/workstations
+Designed for reproducible multi-machine workflows.
 
 ---
 
-# Future Improvements
+# Documentation
 
-Planned future work includes:
+Detailed methodology:
+- `docs/methodology.md`
 
-* Surface-specific Elo ratings
-* Surface-specific rolling statistics
-* ATP ranking integration
-* Betting odds integration
-* Opponent-strength adjustment
-* Time-decay weighting
-* Walk-forward validation
-* Probability calibration
-* Gradient boosting models
-* Neural network experimentation
-* Expanded historical dataset coverage
+Experiment analysis:
+- `docs/experiment_results.md`
+
+Generated experiment outputs:
+- `data/intermediate/*.csv`
 
 ---
 
-# Status
+# Future Work
 
-Active development.
-
-The project currently focuses on ATP singles match prediction and feature engineering research.
+Potential future directions:
+- walk-forward validation,
+- rolling-window optimization,
+- probability calibration,
+- gradient boosting models,
+- matchup/fatigue features.

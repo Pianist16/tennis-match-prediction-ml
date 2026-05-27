@@ -41,7 +41,10 @@ PRE_MATCH_FEATURES = [
     "rolling_Break Points Converted_diff_left_minus_right",
     "rolling_Service Points Won_diff_left_minus_right",
     "rolling_Return Points Won_diff_left_minus_right",
-    "rolling_Total Points Won_diff_left_minus_right",   
+    "rolling_Total Points Won_diff_left_minus_right",
+    "market_prob_left",
+    "market_prob_right",
+    "market_prob_diff_left_minus_right",
 ]
 
 POST_MATCH_FEATURES = [
@@ -66,41 +69,63 @@ POST_MATCH_FEATURES = [
 
 def train_and_evaluate(df, feature_columns, model_name):
     model_df = df[feature_columns + ["target_left_win", "date"]].copy()
+    model_df["date"] = pd.to_datetime(model_df["date"], errors="coerce")
     model_df = model_df.dropna()
     model_df = model_df.sort_values("date").reset_index(drop=True)
 
-    X = model_df[feature_columns]
-    y = model_df["target_left_win"]
+    model_df = model_df[model_df["date"].dt.year >= 2018]
 
-    split_index = int(len(model_df) * 0.8)
+    train_df = model_df[model_df["date"].dt.year <= 2023]
+    validation_df = model_df[model_df["date"].dt.year == 2024]
+    test_df = model_df[model_df["date"].dt.year == 2025]
 
-    X_train = X.iloc[:split_index]
-    X_test = X.iloc[split_index:]
+    X_train = train_df[feature_columns]
+    y_train = train_df["target_left_win"]
 
-    y_train = y.iloc[:split_index]
-    y_test = y.iloc[split_index:]
+    X_validation = validation_df[feature_columns]
+    y_validation = validation_df["target_left_win"]
+
+    X_test = test_df[feature_columns]
+    y_test = test_df["target_left_win"]
 
     logistic_model = LogisticRegression(max_iter=1000)
     logistic_model.fit(X_train, y_train)
 
-    logistic_predictions = logistic_model.predict(X_test)
-    logistic_accuracy = accuracy_score(y_test, logistic_predictions)
+    logistic_validation_predictions = logistic_model.predict(X_validation)
+    logistic_test_predictions = logistic_model.predict(X_test)
 
     rf_model = RandomForestClassifier(
         n_estimators=200,
         random_state=42
     )
-
     rf_model.fit(X_train, y_train)
 
-    rf_predictions = rf_model.predict(X_test)
-    rf_accuracy = accuracy_score(y_test, rf_predictions)
+    rf_validation_predictions = rf_model.predict(X_validation)
+    rf_test_predictions = rf_model.predict(X_test)
+
+    importances = pd.DataFrame({
+        "feature": feature_columns,
+        "importance": rf_model.feature_importances_
+    })
+
+    importances = importances.sort_values(
+        "importance",
+        ascending=False
+    )
+
+    print("\nTop Random Forest Features:")
+    print(importances.head(15))
 
     print(f"\n{model_name}")
     print("Rows used:", len(model_df))
+    print("Train rows:", len(train_df))
+    print("Validation rows:", len(validation_df))
+    print("Test rows:", len(test_df))
     print("Features:", feature_columns)
-    print("Logistic Regression Accuracy:", round(logistic_accuracy, 4))
-    print("Random Forest Accuracy:", round(rf_accuracy, 4))
+    print("Logistic Validation Accuracy:", round(accuracy_score(y_validation, logistic_validation_predictions), 4))
+    print("Logistic Test Accuracy:", round(accuracy_score(y_test, logistic_test_predictions), 4))
+    print("Random Forest Validation Accuracy:", round(accuracy_score(y_validation, rf_validation_predictions), 4))
+    print("Random Forest Test Accuracy:", round(accuracy_score(y_test, rf_test_predictions), 4))
 
 
 def main():
