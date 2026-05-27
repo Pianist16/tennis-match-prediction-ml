@@ -63,19 +63,49 @@ SIMILAR_ELO_FEATURES = [
     "rolling_similar_elo_Total Points Won_diff_left_minus_right",
 ]
 
+RECENT_ONLY_FEATURES = RECENT_FEATURES
+ROLLING_ONLY_FEATURES = ROLLING_FEATURES
+SURFACE_ONLY_FEATURES = SURFACE_ROLLING_FEATURES
+SIMILAR_ELO_ONLY_FEATURES = SIMILAR_ELO_FEATURES
+
 
 FEATURE_SETS = {
+    # Standalone feature groups
     "elo_only": ELO_FEATURES,
-    "elo_recent": ELO_FEATURES + RECENT_FEATURES,
-    "elo_recent_rolling": ELO_FEATURES + RECENT_FEATURES + ROLLING_FEATURES,
+    "recent_form_only": RECENT_ONLY_FEATURES,
+    "rolling_stats_only": ROLLING_ONLY_FEATURES,
     "market_only": MARKET_FEATURES,
-    "elo_market": ELO_FEATURES + MARKET_FEATURES,
+    "surface_rolling_only": SURFACE_ONLY_FEATURES,
+    "similar_elo_only": SIMILAR_ELO_ONLY_FEATURES,
+
+    # Incremental non-market feature build
+    "elo_recent": (
+        ELO_FEATURES
+        + RECENT_FEATURES
+    ),
+    "elo_recent_rolling": (
+        ELO_FEATURES
+        + RECENT_FEATURES
+        + ROLLING_FEATURES
+    ),
+
+    # Market combinations
+    "elo_market": (
+        ELO_FEATURES
+        + MARKET_FEATURES
+    ),
+    "market_rolling": (
+        MARKET_FEATURES
+        + ROLLING_FEATURES
+    ),
     "elo_recent_rolling_market": (
         ELO_FEATURES
         + RECENT_FEATURES
         + ROLLING_FEATURES
         + MARKET_FEATURES
     ),
+
+    # Context experiments
     "elo_recent_rolling_market_surface": (
         ELO_FEATURES
         + RECENT_FEATURES
@@ -83,11 +113,19 @@ FEATURE_SETS = {
         + MARKET_FEATURES
         + SURFACE_ROLLING_FEATURES
     ),
-    "similar_elo_experiment": (
+    "elo_recent_rolling_market_similar_elo": (
         ELO_FEATURES
         + RECENT_FEATURES
         + ROLLING_FEATURES
         + MARKET_FEATURES
+        + SIMILAR_ELO_FEATURES
+    ),
+    "all_available_prematch_features": (
+        ELO_FEATURES
+        + RECENT_FEATURES
+        + ROLLING_FEATURES
+        + MARKET_FEATURES
+        + SURFACE_ROLLING_FEATURES
         + SIMILAR_ELO_FEATURES
     ),
 }

@@ -36,10 +36,11 @@ Temporal validation was selected as the primary methodology.
 
 ---
 
-# Feature Ablation Experiments
+# Feature Experiments
 
 Feature-set experiments were performed incrementally.
 
+## 1. Standalone Feature Groups
 ## Elo Only
 
 Result:
@@ -52,6 +53,7 @@ Observation:
 
 ---
 
+## 2. Incremental Feature Accumulation
 ## Elo + Recent Form
 
 Result:
@@ -104,6 +106,7 @@ Observation:
 
 ---
 
+## 3. Contextual / Specialized Experiments
 ## Surface-Specific Rolling Features
 
 Surface-aware rolling features were tested.
@@ -164,7 +167,7 @@ Approximate results:
 
 ---
 
-# Current Conclusions
+# 4. Final Conclusions
 
 Main conclusions so far:
 

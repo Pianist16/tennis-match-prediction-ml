@@ -12,6 +12,13 @@ data/processed/*
 
 data/intermediate/*
 !data/intermediate/.gitkeep
+
+# Track experiment/analysis outputs
+!data/intermediate/feature_experiment_results.csv
+!data/intermediate/feature_importance_results.csv
+!data/intermediate/validation_strategy_results.csv
+!data/intermediate/data_coverage_by_year.csv
+
 input-data/raw/*.csv
 repo_snapshot*.txt
 .directory

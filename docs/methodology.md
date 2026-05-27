@@ -40,12 +40,13 @@ Scraped data includes:
 
 Pipeline stages:
 
-1. Raw scraping
-2. Preprocessing / normalization
-3. Elo generation
+1. Web-scraping pipeline (Flashscore / ATP data ingestion)
+2. Raw dataset generation and normalization
+3. Retrospective Elo generation
 4. Rolling-stat feature engineering
-5. Differential feature generation
-6. Model training and evaluation
+5. Differential feature construction
+6. Temporal train/validation/test splitting
+7. Feature experimentation and model evaluation
 
 
 ---
@@ -153,6 +154,13 @@ Bookmaker-derived implied probabilities:
 - surface-specific rolling stats,
 - opponent-strength rolling experiments.
 
+### Similar-Opponent-Strength Features
+
+Experimental rolling features were generated using historical performance against opponents with similar pre-match Elo strength.
+
+The goal was to evaluate whether player performance contextualized by opponent quality provides additional predictive signal beyond global rolling averages.
+
+These features showed promising ROC AUC improvements in some configurations, but also introduced additional sparsity and variance.
 
 ---
 
@@ -167,6 +175,7 @@ Results are stored in:
 - `data/intermediate/feature_experiment_results.csv`
 - `data/intermediate/feature_importance_results.csv`
 
+Feature experimentation was evaluated incrementally using standalone and combined feature-group experiments.
 
 ---
 
