@@ -21,15 +21,20 @@ Results:
 
 | Strategy | Model | Accuracy | ROC AUC |
 |---|---|---:|---:|
-| Random Split | Logistic Regression | ~0.637 | ~0.701 |
-| Temporal Split | Logistic Regression | ~0.637 | ~0.687 |
-| Random Split | Random Forest | ~0.628 | ~0.686 |
-| Temporal Split | Random Forest | ~0.622 | ~0.675 |
+| Random Split | Logistic Regression | ~0.645 | ~0.705 |
+| Temporal Split | Logistic Regression | ~0.646 | ~0.701 |
+| Random Split | Random Forest | ~0.631 | ~0.690 |
+| Temporal Split | Random Forest | ~0.633 | ~0.685 |
 
 Observation:
-- random split slightly inflated metrics,
+- random split still produced slightly inflated metrics,
 - especially ROC AUC,
-- due to future information leakage across eras.
+- but the gap between random and temporal validation became relatively small after dataset expansion.
+
+This suggests:
+- improved temporal generalization,
+- relatively stable feature behavior across seasons,
+- and limited large-scale leakage in the current pipeline.
 
 Temporal validation was selected as the primary methodology.
 
@@ -127,12 +132,12 @@ Possible reasons:
 Experimental rolling features based on opponent Elo similarity were evaluated.
 
 Result:
-- mixed outcomes,
-- but promising ROC AUC behavior in some configurations.
+- measurable improvements in both test accuracy and ROC AUC,
+- particularly when combined with Elo, rolling statistics, and market probabilities.
 
 Observation:
-- opponent-quality-aware features may contain additional signal,
-- but require further refinement.
+- opponent-strength contextual rolling features appear to contain meaningful additional predictive signal,
+- especially in temporally separated future holdout evaluation.
 
 
 ---
@@ -154,15 +159,27 @@ Observation:
 
 # Current Benchmark
 
+# Current Benchmark
+
 Current realistic pre-match benchmark:
 - temporal validation,
 - no intentional leakage,
 - rolling historical features,
-- market-aware features.
+- bookmaker implied probabilities,
+- contextual opponent-strength rolling features.
 
 Approximate results:
-- Logistic Regression test accuracy: ~67%
-- ROC AUC: ~0.73–0.76 depending on feature configuration
+
+| Configuration | Test Accuracy | ROC AUC |
+|---|---:|---:|
+| Logistic Regression | ~68-71% | ~0.75-0.78 |
+| Random Forest | ~67-71% | ~0.73-0.77 |
+
+Best-performing configurations included:
+- bookmaker implied probabilities,
+- rolling match statistics,
+- Elo differentials,
+- contextual opponent-strength rolling features.
 
 
 ---
@@ -175,8 +192,9 @@ Main conclusions so far:
 2. Market probabilities contain substantial predictive information.
 3. Elo remains a strong foundational feature.
 4. Rolling historical statistics improve model quality.
-5. Simpler linear models currently generalize more consistently than Random Forest models.
-6. Experimental contextual features require careful sparsity management.
+5. Opponent-strength contextual rolling features add measurable predictive signal.
+6. Simpler linear models generally remain more stable under temporal validation.
+7. Modern-era ATP data (2018+) is substantially more complete and suitable for ML workflows.
 
 
 ---

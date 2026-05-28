@@ -140,9 +140,18 @@ def prepare_model_df(df, feature_columns):
 
     model_df = model_df[model_df["date"].dt.year >= 2018]
 
-    train_df = model_df[model_df["date"].dt.year <= 2023]
-    validation_df = model_df[model_df["date"].dt.year == 2024]
-    test_df = model_df[model_df["date"].dt.year == 2025]
+    train_df = model_df[
+        (model_df["date"].dt.year >= 2018)
+        & (model_df["date"].dt.year <= 2024)
+    ]
+
+    validation_df = model_df[
+        model_df["date"].dt.year == 2025
+    ]
+
+    test_df = model_df[
+        model_df["date"].dt.year == 2026
+    ]
 
     return model_df, train_df, validation_df, test_df
 

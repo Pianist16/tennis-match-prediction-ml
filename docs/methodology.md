@@ -96,11 +96,12 @@ Results showed:
 - sparse odds coverage before 2020,
 - lower match volume before 2018,
 - significantly improved consistency from 2018 onward.
+- very high bookmaker odds coverage from 2025 onward (~98%+).
 
 This motivated the primary modeling regime:
 
-- Training data focus: 2018+
-- Market-aware models: 2020+ preferred
+- Primary modeling regime: 2018+
+- Market-aware modeling becomes substantially more reliable from 2020 onward.
 
 
 ---
@@ -114,13 +115,13 @@ Traditional shuffled train/test split.
 
 ## Temporal Split
 Train:
-- 2018–2023
+- 2018–2024
 
 Validation:
-- 2024
+- 2025
 
 Test:
-- 2025
+- 2026
 
 Temporal validation was selected as the preferred methodology because it better reflects real-world forecasting conditions and avoids future information leakage.
 
@@ -160,7 +161,9 @@ Experimental rolling features were generated using historical performance agains
 
 The goal was to evaluate whether player performance contextualized by opponent quality provides additional predictive signal beyond global rolling averages.
 
-These features showed promising ROC AUC improvements in some configurations, but also introduced additional sparsity and variance.
+These features produced measurable improvements in both accuracy and ROC AUC in several temporal validation configurations, particularly when combined with Elo, rolling statistics, and market features.
+
+However, they also introduce additional sparsity and variance and require careful historical coverage handling.
 
 ---
 
@@ -197,11 +200,13 @@ Evaluation metrics:
 
 Main observations so far:
 
-- Market probabilities are highly predictive.
+- Market probabilities are highly predictive and remain the strongest standalone feature group.
 - Elo remains one of the strongest non-market features.
-- Rolling performance statistics improve predictive power.
+- Rolling performance statistics provide measurable incremental predictive value.
+- Opponent-strength contextual rolling features add additional predictive signal beyond global rolling averages.
 - Surface-specific rolling features produced limited improvement in current form.
-- Logistic Regression generalizes more consistently than Random Forest on temporal test data.
+- Logistic Regression generally remains more stable than Random Forest under temporal validation.
+- Modern-era ATP datasets (2018+) are substantially more complete and suitable for ML experimentation workflows.
 
 
 ---
@@ -220,3 +225,8 @@ The current implementation intentionally prioritizes:
 - realistic evaluation,
 - and interpretability
 over complex model architectures.
+
+Current dataset scope:
+- ~28k historical ATP matches,
+- 2012-2026 coverage,
+- ~24k usable post-2018 modeling rows.

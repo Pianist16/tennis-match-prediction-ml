@@ -75,9 +75,9 @@ def train_and_evaluate(df, feature_columns, model_name):
 
     model_df = model_df[model_df["date"].dt.year >= 2018]
 
-    train_df = model_df[model_df["date"].dt.year <= 2023]
-    validation_df = model_df[model_df["date"].dt.year == 2024]
-    test_df = model_df[model_df["date"].dt.year == 2025]
+    train_df = model_df[model_df["date"].dt.year <= 2024]
+    validation_df = model_df[model_df["date"].dt.year == 2025]
+    test_df = model_df[model_df["date"].dt.year == 2026]
 
     X_train = train_df[feature_columns]
     y_train = train_df["target_left_win"]

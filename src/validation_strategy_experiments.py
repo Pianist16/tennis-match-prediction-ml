@@ -112,11 +112,11 @@ def main():
     #
 
     train_df = model_df[
-        model_df["date"].dt.year <= 2023
+        model_df["date"].dt.year <= 2025
     ]
 
     test_df = model_df[
-        model_df["date"].dt.year == 2025
+        model_df["date"].dt.year == 2026
     ]
 
     x_train_temporal = train_df[FEATURE_COLUMNS]
